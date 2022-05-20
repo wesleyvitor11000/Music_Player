@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/primary_background"
+    app:cardCornerRadius="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:paddingVertical="12dp">
+
+            <ImageView
+                android:id="@+id/music_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_baseline_music_note_24"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:paddingHorizontal="12dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/music_title_textview"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    android:singleLine="true"
+                    android:scrollHorizontally="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:ellipsize="marquee"
+
+                    android:text="music title"
+                    android:textColor="@color/primary_white"/>
+
+                <TextView
+                    android:id="@+id/music_artist_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="artist"
+                    android:textColor="@color/medium_opacity_white"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/more_options_button"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                android:background="#00A4A4A4"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:background="@color/low_opacity_white"/>
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Music_Player</string>
+
+    <string name="open_lateral_navigation"> Open Lateral Navigation Menu</string>
+    <string name="close_lateral_navigation"> Close Lateral Navigation Menu</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

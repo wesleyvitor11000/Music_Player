@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MusicsFragment"
+    android:background="@color/primary_background">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+
+        android:indeterminateTint="@color/primary_blue"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/no_song_found_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:visibility="gone"
+
+        android:text="No Song Found :/"
+        android:gravity="center"
+        android:textColor="@color/medium_opacity_white"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/musics_recycleview"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+</FrameLayout>

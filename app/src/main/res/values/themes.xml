@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Music_Player" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary_background</item>
+        <item name="colorPrimaryVariant">@color/primary_background</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/primary_white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="lateral_menu_style" parent="Widget.Design.NavigationView">
+        <item name="android:textColorSecondary">@color/primary_white</item>
+        <item name="android:listDivider">@color/low_opacity_white</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:background">@color/secondary_background</item>
+        <item name="itemIconTint">@color/primary_white</item>
+        <item name="itemTextColor">@color/primary_white</item>
+    </style>
+
+    <style name="toolbar_style" parent="Theme.Music_Player">
+        <item name="titleTextColor">@color/primary_white</item>
+        <item name="android:textColorPrimary">@color/primary_white</item>
+        <item name="android:textColorSecondary">@color/primary_white</item>
+        <item name="android:textColorHint">@color/low_opacity_white</item>
+    </style>
+
+</resources>

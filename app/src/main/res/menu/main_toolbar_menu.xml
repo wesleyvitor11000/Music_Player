@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="Search Button"
+        android:id="@+id/search_button"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item android:title="sort_option"
+        android:icon="@drawable/ic_baseline_sort_24"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/sort_name_option"
+                android:title="Name"/>
+            <item android:id="@+id/sort_date_option"
+                android:title="Date"/>
+        </menu>
+    </item>
+
+</menu>

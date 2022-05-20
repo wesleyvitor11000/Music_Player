@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@color/primary_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+
+        app:elevation="0dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+
+            style="@style/toolbar_style"
+            android:theme= "@style/toolbar_style"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/main_tab_layout"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingHorizontal="12dp"
+
+                app:tabMode="scrollable"
+                android:animateLayoutChanges="true"
+                app:tabIndicatorAnimationMode="elastic"
+
+                android:background="@color/primary_background"
+                app:tabSelectedTextColor="@color/primary_blue"
+                app:tabIndicatorColor="@color/primary_blue"
+
+                app:tabTextColor="@color/primary_white"
+                android:textAlignment="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+
+                android:layout_marginHorizontal="12dp"
+                android:background="@color/low_opacity_white"/>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/main_view_pager"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/lateral_navigation_view"
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_gravity="start"
+
+            style="@style/lateral_menu_style"
+            android:theme="@style/lateral_menu_style"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingHorizontal="12dp"
+
+            android:background="@color/secondary_background"
+            app:menu="@menu/lateral_menu"/>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
