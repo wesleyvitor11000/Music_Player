@@ -3,21 +3,21 @@ package com.example.music_player.utils;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.music_player.enumsAndGlobals.GlobalAtributes;
 import com.example.music_player.enumsAndGlobals.SortKey;
-import com.example.music_player.metadata.ItemMetadata;
+import com.example.music_player.interfacesAndAbstracts.ItemMetadata;
 import com.example.music_player.metadata.SongMetadata;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
 
 public class MetadataUtil {
+
+    private static String TAG = "MetadataUtil";
 
     public static SortKey[] extractSortKeysFromString(String[] sortKeysString){
 
@@ -50,11 +50,16 @@ public class MetadataUtil {
         SongMetadata[] songsMetadata = new SongMetadata[songs.length];
 
         for(int i = 0; i < songs.length; i++){
+            try{
             MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
             Uri uri = Uri.fromFile(songs[i]);
             metadataRetriever.setDataSource(context, uri);
 
             songsMetadata[i] = getAttributes(songs[i], metadataRetriever);
+
+            }catch(Exception e){
+                Log.e(TAG, "Error on read file metadata", e);
+            }
         }
 
         return songsMetadata;

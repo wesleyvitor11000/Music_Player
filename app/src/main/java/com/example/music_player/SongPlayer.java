@@ -1,13 +1,15 @@
 package com.example.music_player;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
+
+import androidx.annotation.NonNull;
 
 import com.example.music_player.metadata.SongMetadata;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
+import java.util.HashMap;
 
 public class SongPlayer {
 
@@ -16,121 +18,206 @@ public class SongPlayer {
         REPEAT_CURRENT,
         REPEAT_ALL
     }
-    private static ArrayList<SongMetadata> playingSongs = new ArrayList<>();
-    private static MediaPlayer mediaPlayer = new MediaPlayer();
 
-    private static boolean alreadyRunning = false;
+    private static PlayerActivity playerActivity;
+    private static MediaPlayer mediaPlayer;
 
-    private static int actualSong = 0;
-    private static boolean playing = true;
-    private static RepeatMode repeatMode = RepeatMode.NO_REPEAT;
+    //Data structuring
+    private static HashMap<SongMetadata, Integer> songMetadataMap = new HashMap<>();
+    private static ArrayList<SongMetadata> songMetadataArrayList = new ArrayList<>();
 
-    private static void runMediaPlayer(Context context){
-        if(alreadyRunning) return;
+    //Current playing song
+    private static SongMetadata currentSong;
+    private static int currentSongIndex = 0;
 
-        startMediaPlayer(context, actualSong);
-        alreadyRunning = true;
-    }
+    //Control vars
+    private static boolean isPlaying = false;
+    private static RepeatMode currentRepeatMode = RepeatMode.REPEAT_ALL;
 
-    private static void reproduceSong(Context context, int position){
-        if(playingSongs == null || position >= playingSongs.size() || playingSongs.size() <= 0) return;
+    private static void updateMediaPlayer(Context context){
 
-        stopMediaPlayer();
+        if(mediaPlayer != null){
+            stopMediaPlayer();
+        }
 
-        mediaPlayer = MediaPlayer.create(context, playingSongs.get(position).getUri());
+        mediaPlayer = (currentSong == null) ? null : MediaPlayer.create(context, currentSong.getUri());
+        if(mediaPlayer == null) {
+            isPlaying = false;
+            return;
+        }
+        if(isPlaying) mediaPlayer.start();
 
-        if(playing) mediaPlayer.start();
-
-    }
-
-    private static void startMediaPlayer(Context context, int position){
-        reproduceSong(context, position);
-        playing = true;
-
-        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
-            switch (repeatMode){
-                case NO_REPEAT:
-
-                    actualSong++;
-                    if(actualSong >= playingSongs.size()){
-                        actualSong = 0;
-                        playing = false;
-                    }
-                    break;
-
-                case REPEAT_CURRENT:
-                    break;
-
-                case REPEAT_ALL:
-
-                    actualSong = (actualSong + 1) % playingSongs.size();
-                    break;
-            }
-
-            if(playing) reproduceSong(context, actualSong);
+        mediaPlayer.setOnCompletionListener(mp -> {
+            setNextSong(false);
+            updateMediaPlayer(context);
         });
     }
 
     private static void stopMediaPlayer(){
+        if(mediaPlayer == null) return;
+
         if(mediaPlayer.isPlaying()){
             mediaPlayer.stop();
         }
-        alreadyRunning = false;
+
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
-    public static void resetPlayer(){
-        stopMediaPlayer();
-        actualSong = 0;
-        playingSongs = new ArrayList<>();
-        alreadyRunning = false;
+    public static boolean isPlaying(){return isPlaying;}
+
+    public static void setRepeatMode(RepeatMode repeatMode){
+        currentRepeatMode = repeatMode;
+    }
+
+    public static RepeatMode getCurrentRepeatMode(){return currentRepeatMode;}
+
+    public static void playSong(@NonNull SongMetadata song, @NonNull Context context){
+
+        if(!songMetadataMap.containsKey(song)){
+            currentSongIndex = addSong(song);
+        }else{
+            Integer index = songMetadataMap.get(song);
+
+            if(index != null)
+                currentSongIndex = index;
+        }
+
+        currentSong = song;
+
+        updateMediaPlayer(context);
+        playSongs(context);
+    }
+
+    public static void playSongs(@NonNull Context context){
+
+        if(songMetadataMap.size() <= 0) return;
+
+        if(!isPlaying){
+            if(currentSong == null){
+                currentSong = songMetadataArrayList.get(0);
+                currentSongIndex = 0;
+            }
+            isPlaying = true;
+            updateMediaPlayer(context);
+            mediaPlayer.start();
+        }
+    }
+    public static void resumeSong(){
+        if(mediaPlayer != null && !mediaPlayer.isPlaying()){
+            mediaPlayer.start();
+            isPlaying = true;
+        }
     }
 
     public static void pauseSong(){
-
+        if(mediaPlayer != null && mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+            isPlaying = false;
+        }
     }
 
-    public static void continueSong(){
-
+    public static void playNextSong(Context context){
+        setNextSong(true);
+        updateMediaPlayer(context);
     }
 
-    public static void nextSong(){
-
+    public static void playpreviousSong(Context context){
+        setPreviousSong();
+        updateMediaPlayer(context);
     }
 
-    public static void previousSong(){
+    private static void setPreviousSong(){
 
+        if (currentRepeatMode == RepeatMode.REPEAT_ALL) {
+            currentSongIndex = (currentSongIndex - 1);
+            currentSongIndex = (currentSongIndex < 0) ? songMetadataArrayList.size() - 1 : currentSongIndex;
+            currentSong = songMetadataArrayList.get(currentSongIndex);
+
+            return;
+        }
+
+        int previous = currentSongIndex - 1;
+
+        if (previous >= 0) {
+            currentSongIndex = previous;
+            currentSong = songMetadataArrayList.get(previous);
+        }
     }
 
-    public static void goToSong(int position){
+    private static void setNextSong(boolean userInput){
+        switch (currentRepeatMode){
+            case NO_REPEAT:
+                int next = currentSongIndex + 1;
 
+                if (next >= songMetadataArrayList.size()) {
+                    currentSong = null;
+                    currentSongIndex = 0;
+                    stopMediaPlayer();
+                    break;
+                }
+
+                currentSongIndex = next;
+                currentSong = songMetadataArrayList.get(next);
+
+                break;
+            case REPEAT_CURRENT:
+                if(userInput){
+                    int nextSong = currentSongIndex + 1;
+
+                    if (nextSong >= songMetadataArrayList.size()) {
+                        break;
+                    }
+
+                    currentSongIndex = nextSong;
+                    currentSong = songMetadataArrayList.get(nextSong);
+                }
+
+                break;
+
+            case REPEAT_ALL:
+                currentSongIndex = (currentSongIndex + 1) % songMetadataArrayList.size();
+                currentSong = songMetadataArrayList.get(currentSongIndex);
+                break;
+        }
     }
 
-    public static void activateRandomReproduction(){
-
+    public static void addAllSongs(SongMetadata[] songs){
+        for (SongMetadata song: songs) {
+            addSong(song);
+        }
     }
 
-    public static void setSong(SongMetadata song, Context context){
-        resetPlayer();
-        addSong(song, context);
+    public static int addSong(@NonNull SongMetadata song){
+
+        Integer index;
+
+        if(songMetadataMap.containsKey(song)){
+            index = songMetadataMap.get(song);
+            return (index == null) ? 0 : index;
+        }
+
+        index = songMetadataArrayList.size();
+        songMetadataMap.put(song, index);
+        songMetadataArrayList.add(song);
+
+        return index;
     }
 
-    public static void setSongRange(SongMetadata[] songs, int position, Context context){
-        resetPlayer();
-        addSongRange(songs, context);
+    public static void clearAllSongs(){
+        songMetadataArrayList.clear();
+        songMetadataMap.clear();
+        isPlaying = false;
+        currentSong = null;
+        currentSongIndex = 0;
     }
 
-    public static void addSong(SongMetadata song, Context context){
-        playingSongs.add(song);
-        runMediaPlayer(context);
-    }
+    public static void showPlayerActivity(Context context){
+        if (playerActivity == null){
+            playerActivity = new PlayerActivity();
+        }
 
-    public static void addSongRange(SongMetadata[] songs, Context context){
-        playingSongs.addAll(Arrays.asList(songs));
-        runMediaPlayer(context);
+        Intent intent = new Intent(context, playerActivity.getClass());
+        context.startActivity(intent);
     }
-
-    public static void setRepeatMode(RepeatMode newRepeatMode){
-        repeatMode = newRepeatMode;
-    }
-
 }

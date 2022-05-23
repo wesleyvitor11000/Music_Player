@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.music_player.R;
 import com.example.music_player.enumsAndGlobals.SortKey;
-import com.example.music_player.interfaces.SortedFragment;
+import com.example.music_player.interfacesAndAbstracts.SortedFragment;
 
 /**
  * A simple {@link Fragment} subclass.

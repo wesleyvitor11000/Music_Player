@@ -1,4 +1,4 @@
-package com.example.music_player.interfaces;
+package com.example.music_player.interfacesAndAbstracts;
 
 import com.example.music_player.metadata.SongMetadata;
 

@@ -8,9 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.fragments.ArtistsFragment;
-import com.example.music_player.fragments.MusicsFragment;
+import com.example.music_player.fragments.SongsFragment;
 import com.example.music_player.fragments.PlaylistsFragment;
-import com.example.music_player.interfaces.SortedFragment;
+import com.example.music_player.interfacesAndAbstracts.SortedFragment;
 
 public class FragmentAdapter extends FragmentStateAdapter {
 
@@ -52,7 +52,7 @@ public class FragmentAdapter extends FragmentStateAdapter {
                 fragment = new ArtistsFragment();
                 break;
             default:
-                fragment = new MusicsFragment(sortKeys[0]);
+                fragment = new SongsFragment(sortKeys[0]);
                 break;
         }
 

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_player.R;
 import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
-import com.example.music_player.interfaces.SortedFragment;
+import com.example.music_player.interfacesAndAbstracts.SortedFragment;
 import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.MetadataUtil;
 
@@ -25,7 +25,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     private final SongMetadata[] allSongsMetadata;
     private SongMetadata[] findSongsMetadata;
-    private SongMetadata[] actualSongsMetadata;
+    private SongMetadata[] currentSongsMetadata;
 
     private final Context context;
     private SortKey sortKey;
@@ -38,7 +38,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         allSongsMetadata = MetadataUtil.getAttributes(context, songs);
         findSongsMetadata = new SongMetadata[0];
 
-        actualSongsMetadata = allSongsMetadata;
+        currentSongsMetadata = allSongsMetadata;
 
         sortElements(sortKey);
     }
@@ -54,12 +54,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull SongHolder holder, int position) {
-        holder.setAttributes(actualSongsMetadata[position]);
+        holder.setAttributes(currentSongsMetadata[position]);
     }
 
     @Override
     public int getItemCount() {
-        return actualSongsMetadata.length;
+        return currentSongsMetadata.length;
     }
 
     @Override
@@ -76,14 +76,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     @Override
     public void enterSearchMode() {
         isSearching = true;
-        actualSongsMetadata = new SongMetadata[0];
+        currentSongsMetadata = new SongMetadata[0];
         notifyDataSetChanged();
     }
 
     @Override
     public void findItemsByName(String name) {
         if(isSearching){
-            actualSongsMetadata = MetadataUtil.searchItemsByName(name, allSongsMetadata).toArray(new SongMetadata[0]);
+            currentSongsMetadata = MetadataUtil.searchItemsByName(name, allSongsMetadata).toArray(new SongMetadata[0]);
 
             notifyDataSetChanged();
         }
@@ -93,7 +93,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     public void exitSearchMode() {
         isSearching = false;
         notifyDataSetChanged();
-        actualSongsMetadata = allSongsMetadata;
+        currentSongsMetadata = allSongsMetadata;
     }
 
     public class SongHolder extends RecyclerView.ViewHolder{
@@ -109,7 +109,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             musicImage = itemView.findViewById(R.id.music_image);
 
             itemView.setOnClickListener(view -> {
-                SongPlayer.setSong(actualSongsMetadata[getLayoutPosition()], context);
+                SongPlayer.addAllSongs(currentSongsMetadata);
+                SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
+                SongPlayer.showPlayerActivity(context);
             });
         }
 

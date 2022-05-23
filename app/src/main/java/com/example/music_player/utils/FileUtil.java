@@ -32,7 +32,9 @@ public class FileUtil {
     public static ArrayList<File> findSongsArray(File files){
 
         ArrayList<File> songs = new ArrayList<>();
-        File[] filesOnDirectory = files.listFiles();
+        File[] filesOnDirectory;
+
+        filesOnDirectory = files.listFiles();
 
         if(filesOnDirectory == null) return songs;
 
@@ -41,10 +43,11 @@ public class FileUtil {
                 songs.addAll(findSongsArray(file));
             }else{
                 if (verifyFileSupport(file)){
-                    songs.add(file);
+                  songs.add(file);
                 }
             }
         }
+
         return songs;
     }
 

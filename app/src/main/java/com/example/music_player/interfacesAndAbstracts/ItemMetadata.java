@@ -1,4 +1,4 @@
-package com.example.music_player.metadata;
+package com.example.music_player.interfacesAndAbstracts;
 
 import android.net.Uri;
 
@@ -20,9 +20,7 @@ public abstract class ItemMetadata {
 
     public String getName(){return name;}
 
-    public long getDate(){
-        return date;
-    }
+    public long getDate(){return date;}
 
     public File getFile() {return file;}
 

@@ -19,16 +19,16 @@ import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.utils.FileUtil;
 import com.example.music_player.adapters.SongAdapter;
 import com.example.music_player.R;
-import com.example.music_player.interfaces.SortedFragment;
+import com.example.music_player.interfacesAndAbstracts.SortedFragment;
 
 import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MusicsFragment#newInstance} factory method to
+ * Use the {@link SongsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MusicsFragment extends Fragment implements SortedFragment {
+public class SongsFragment extends Fragment implements SortedFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,11 +47,11 @@ public class MusicsFragment extends Fragment implements SortedFragment {
     private  ProgressBar progressBar;
     TextView noSongFoundTextView;
 
-    public MusicsFragment() {
+    public SongsFragment() {
         // Required empty public constructor
     }
 
-    public MusicsFragment(SortKey sortKey){
+    public SongsFragment(SortKey sortKey){
         this.sortKey = sortKey;
     }
 
@@ -64,8 +64,8 @@ public class MusicsFragment extends Fragment implements SortedFragment {
      * @return A new instance of fragment musics_fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MusicsFragment newInstance(String param1, String param2) {
-        MusicsFragment fragment = new MusicsFragment();
+    public static SongsFragment newInstance(String param1, String param2) {
+        SongsFragment fragment = new SongsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
