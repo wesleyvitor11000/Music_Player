@@ -205,6 +205,7 @@ public class SongPlayer {
     }
 
     public static void clearAllSongs(){
+        stopMediaPlayer();
         songMetadataArrayList.clear();
         songMetadataMap.clear();
         isPlaying = false;

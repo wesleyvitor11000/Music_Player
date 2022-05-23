@@ -3,6 +3,7 @@ package com.example.music_player;
 import static com.example.music_player.enumsAndGlobals.SortKey.SORT_DATE;
 import static com.example.music_player.enumsAndGlobals.SortKey.SORT_NAME;
 
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +14,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.music_player.adapters.FragmentAdapter;
@@ -211,5 +214,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+    public static void showPopupMenu(Context context, View view, @MenuRes int menu, PopupMenu.OnMenuItemClickListener onItemSelected){
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.setOnMenuItemClickListener(onItemSelected);
+
+        MenuInflater menuInflater = popupMenu.getMenuInflater();
+        menuInflater.inflate(menu, popupMenu.getMenu());
+        popupMenu.show();
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/reproduce"
+        android:title="Reproduce"/>
+
+    <item android:id="@+id/reproduce_all"
+        android:title="Reproduce all"/>
+
+    <item android:id="@+id/add_song"
+        android:title="Add song"/>
+
+    <item android:id="@+id/add_all_songs"
+        android:title="Add all song"/>
+
+
+</menu>

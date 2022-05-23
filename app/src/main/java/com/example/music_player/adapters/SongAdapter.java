@@ -4,14 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_player.MainActivity;
 import com.example.music_player.R;
 import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
@@ -113,6 +117,35 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
                 SongPlayer.showPlayerActivity(context);
             });
+
+            ImageButton moreOptionsButton = itemView.findViewById(R.id.more_options_button);
+
+            moreOptionsButton.setOnClickListener(view -> MainActivity.showPopupMenu(context, view, R.menu.sound_adapter_menu, menuItem -> {
+                switch (menuItem.getItemId()){
+                    case R.id.reproduce:
+                        SongPlayer.clearAllSongs();
+                        SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
+                        SongPlayer.playSongs(context);
+                        break;
+
+                    case R.id.reproduce_all:
+                        SongPlayer.clearAllSongs();
+                        SongPlayer.addAllSongs(currentSongsMetadata);
+                        SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
+                        break;
+
+                    case R.id.add_song:
+                        SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
+                        SongPlayer.playSongs(context);
+                        break;
+
+                    case R.id.add_all_songs:
+                        SongPlayer.addAllSongs(currentSongsMetadata);
+                        SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
+
+                }
+                return true;
+            }));
         }
 
         public void setAttributes(SongMetadata songMetadata){
