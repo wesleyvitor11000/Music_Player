@@ -97,7 +97,8 @@ public class FileUtil {
     }
 
     public static String[] readFile(String fileName, String directory, Context context){
-        String[] content = new String[GlobalAtributes.FRAGMENTS_NUMBER];
+        //String[] content = new String[GlobalAtributes.FRAGMENTS_NUMBER];
+        ArrayList<String> content = new ArrayList<>();
 
         File file = getInternalFileFrom(fileName, directory, context);
 
@@ -109,9 +110,8 @@ public class FileUtil {
 
             String line = bufferedReader.readLine();
 
-            for(int i = 0; i < content.length && line != null; line = bufferedReader.readLine(), i++){
-                System.out.println("Reading: " + line);
-                content[i] = line;
+            for(; line != null; line = bufferedReader.readLine()){
+                content.add(line);
             }
 
             bufferedReader.close();
@@ -122,7 +122,7 @@ public class FileUtil {
             return null;
         }
 
-        return content;
+        return content.toArray(new String[0]);
     }
 
     public static File getInternalFileFrom(String fileName, String directory, Context context){
@@ -172,12 +172,14 @@ public class FileUtil {
 
         for (PlaylistMetadata playlist : playlists) {
             if(playlist != null) {
-                stringBuilder.append(playlist.getName()).append("|");
+                stringBuilder.append(playlist.getName()).append("#");
                 stringBuilder.append(playlist.getDate()).append("\n");
             }
         }
 
         saveStringToFile(stringBuilder.toString(), playlistsFileName, context);
+        System.out.println("testing reimport");
+        importPlaylists(context);
     }
 
     public static ArrayList<PlaylistMetadata> importPlaylists(@NonNull Context context) {
@@ -189,7 +191,7 @@ public class FileUtil {
         for(String s : playlistsNames){
 
             if(s == null) continue;
-            int index = s.indexOf("|");
+            int index = s.indexOf("#");
             String name = s.substring(0, index);
             long date = Long.parseLong(s.substring(index + 1));
 
