@@ -7,15 +7,23 @@
 
     android:background="@color/primary_background">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_playlist_floating_button"
+
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycleview"
+
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="6dp"
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Playlists"
+        android:layout_height="match_parent"/>
 
-        android:gravity="center"
 
-        android:textSize="24sp"
-        android:textColor="@color/primary_white"/>
 
 </FrameLayout>

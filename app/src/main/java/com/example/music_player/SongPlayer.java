@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 
 import androidx.annotation.NonNull;
 
+import com.example.music_player.interfacesAndAbstracts.SongListCallback;
 import com.example.music_player.metadata.SongMetadata;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class SongPlayer {
         REPEAT_CURRENT,
         REPEAT_ALL
     }
+
+    private static final ArrayList<SongListCallback> songListCallbacks = new ArrayList<>();
 
     private static PlayerActivity playerActivity;
     private static MediaPlayer mediaPlayer;
@@ -34,6 +37,20 @@ public class SongPlayer {
     private static boolean isPlaying = false;
     private static RepeatMode currentRepeatMode = RepeatMode.REPEAT_ALL;
 
+    public static void addSongListListener(SongListCallback songListListener){
+        songListCallbacks.add(songListListener);
+    }
+
+    private static void onSongChanged(){
+        for (SongListCallback s: songListCallbacks) {
+            s.onSongChanged(currentSong);
+        }
+    }
+
+    public static ArrayList<SongMetadata> getCurrentSongs(){
+        return songMetadataArrayList;
+    }
+
     private static void updateMediaPlayer(Context context){
 
         if(mediaPlayer != null){
@@ -41,16 +58,19 @@ public class SongPlayer {
         }
 
         mediaPlayer = (currentSong == null) ? null : MediaPlayer.create(context, currentSong.getUri());
+
         if(mediaPlayer == null) {
             isPlaying = false;
-            return;
-        }
-        if(isPlaying) mediaPlayer.start();
+        }else{
+            if(isPlaying) mediaPlayer.start();
 
-        mediaPlayer.setOnCompletionListener(mp -> {
-            setNextSong(false);
-            updateMediaPlayer(context);
-        });
+            mediaPlayer.setOnCompletionListener(mp -> {
+                setNextSong(false);
+                updateMediaPlayer(context);
+            });
+        }
+
+        onSongChanged();
     }
 
     private static void stopMediaPlayer(){

@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.example.music_player.metadata.SongMetadata;
 
 public class PlayerActivity extends AppCompatActivity {
 
@@ -70,9 +73,17 @@ public class PlayerActivity extends AppCompatActivity {
             setRepeatButtonBackground(currentRepeatMode);
         });
 
+        StringBuilder teste = new StringBuilder();
+        for(SongMetadata s : SongPlayer.getCurrentSongs()){
+            teste.append(s.getName() + '\n');
+        }
+        setTEMP(teste.toString());
 
+    }
 
-
+    private void setTEMP(String text){
+        TextView textView = findViewById(R.id.TEMP_TV);
+        textView.setText(text);
     }
 
     private void setPlayPauseButtonBackground(boolean isPlaying){

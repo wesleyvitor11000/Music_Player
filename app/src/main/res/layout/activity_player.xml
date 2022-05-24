@@ -7,44 +7,62 @@
     tools:context=".PlayerActivity"
     android:background="@color/primary_background">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:padding="24dp"
+        android:orientation="vertical">
 
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <ImageButton
-            android:id="@+id/repeat_mode_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:background="@drawable/ic_baseline_repeat_24"/>
+            android:padding="24dp"
 
-        <ImageButton
-            android:id="@+id/previous_song_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-            android:background="@drawable/ic_baseline_skip_previous_24"/>
+            <ImageButton
+                android:id="@+id/repeat_mode_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <ImageButton
-            android:id="@+id/play_pause_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                android:background="@drawable/ic_baseline_repeat_24"/>
 
-            android:background="@drawable/ic_baseline_play_circle_outline_24"/>
+            <ImageButton
+                android:id="@+id/previous_song_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <ImageButton
-            android:id="@+id/nex_song_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                android:background="@drawable/ic_baseline_skip_previous_24"/>
 
-            android:background="@drawable/ic_baseline_skip_next_24"/>
+            <ImageButton
+                android:id="@+id/play_pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/ic_baseline_play_circle_outline_24"/>
+
+            <ImageButton
+                android:id="@+id/nex_song_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/ic_baseline_skip_next_24"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/TEMP_TV"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+
+            android:textColor="@color/white"
+
+            android:scrollbars="vertical"/>
+
+    </LinearLayout>
 
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

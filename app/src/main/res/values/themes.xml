@@ -30,4 +30,9 @@
         <item name="android:textColorHint">@color/low_opacity_white</item>
     </style>
 
+    <style name="InputDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background"> @color/secondary_background </item>
+        <item name="android:textColor"> @color/primary_white</item>
+    </style>
+
 </resources>

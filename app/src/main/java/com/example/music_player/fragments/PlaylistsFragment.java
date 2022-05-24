@@ -3,14 +3,24 @@ package com.example.music_player.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.music_player.MainActivity;
 import com.example.music_player.R;
+import com.example.music_player.adapters.PlaylistAdapter;
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
+import com.example.music_player.metadata.PlaylistMetadata;
+import com.example.music_player.utils.FileUtil;
+import com.example.music_player.utils.PlaylistsUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,8 +72,29 @@ public class PlaylistsFragment extends Fragment implements SortedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.playlists_fragment, container, false);
+        View view =  inflater.inflate(R.layout.playlists_fragment, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.playlists_recycleview);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+
+        ArrayList<PlaylistMetadata> playlists = PlaylistsUtil.getPlaylists(view.getContext());
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(playlists, view.getContext());
+
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(playlistAdapter);
+
+        FloatingActionButton addPlaylistButton = view.findViewById(R.id.add_playlist_floating_button);
+
+        addPlaylistButton.setOnClickListener(v -> {
+            MainActivity.showTextInputDialog(view.getContext(), "Playlist name", name -> {
+                PlaylistMetadata playlist = new PlaylistMetadata(name, 0);
+                PlaylistsUtil.addPlaylist(playlist, view.getContext());
+
+                playlistAdapter.notifyInsertion();
+            });
+        });
+
+        return view;
     }
 
     @Override

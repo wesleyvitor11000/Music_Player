@@ -6,6 +6,7 @@ import static com.example.music_player.enumsAndGlobals.SortKey.SORT_NAME;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -16,16 +17,22 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.music_player.adapters.FragmentAdapter;
 import com.example.music_player.enumsAndGlobals.SortKey;
+import com.example.music_player.interfacesAndAbstracts.InputEnterCallback;
+import com.example.music_player.interfacesAndAbstracts.SongListCallback;
+import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.FileUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -112,6 +119,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        SongPlayer.addSongListListener(new SongListCallback() {
+            @Override
+            public void onSongChanged(SongMetadata currentPlayingSong) {
+                String name = (currentPlayingSong == null) ?
+                        "Finished" :
+                        currentPlayingSong.getName();
+
+                Toast.makeText(MainActivity.this, name, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public static void showTextInputDialog(@NonNull Context context, @NonNull String title,@NonNull InputEnterCallback inputEnterCallback){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.InputDialogTheme);
+
+        final EditText editText = new EditText(context);
+        editText.setSingleLine();
+
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setView(editText);
+
+        alertDialogBuilder.setPositiveButton("Save", (dialogInterface, i) -> {
+            inputEnterCallback.onInputEnter(editText.getText().toString());
+        });
+
+        alertDialogBuilder.show();
     }
 
     private int addMultipleTabsToTablayout(@NonNull TabLayout tabLayout, @NonNull String... tabNames){

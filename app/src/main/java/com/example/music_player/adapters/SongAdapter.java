@@ -136,13 +136,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
                     case R.id.add_song:
                         SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
-                        SongPlayer.playSongs(context);
                         break;
 
                     case R.id.add_all_songs:
                         SongPlayer.addAllSongs(currentSongsMetadata);
-                        SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
-
+                        break;
                 }
                 return true;
             }));

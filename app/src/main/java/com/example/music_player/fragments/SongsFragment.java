@@ -15,11 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.utils.FileUtil;
 import com.example.music_player.adapters.SongAdapter;
 import com.example.music_player.R;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 
@@ -117,6 +119,12 @@ public class SongsFragment extends Fragment implements SortedFragment {
         };
 
         importMusicsThread.start();
+
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.TEMP_BUTTON);
+
+        floatingActionButton.setOnClickListener(v -> {
+            SongPlayer.showPlayerActivity(view.getContext());
+        });
 
         return view;
     }
