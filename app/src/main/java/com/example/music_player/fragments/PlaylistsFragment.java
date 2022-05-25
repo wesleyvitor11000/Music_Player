@@ -14,6 +14,7 @@ import com.example.music_player.MainActivity;
 import com.example.music_player.R;
 import com.example.music_player.adapters.PlaylistAdapter;
 import com.example.music_player.enumsAndGlobals.SortKey;
+import com.example.music_player.interfacesAndAbstracts.InputEnterCallback;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
 import com.example.music_player.metadata.PlaylistMetadata;
 import com.example.music_player.utils.FileUtil;
@@ -86,11 +87,16 @@ public class PlaylistsFragment extends Fragment implements SortedFragment {
         FloatingActionButton addPlaylistButton = view.findViewById(R.id.add_playlist_floating_button);
 
         addPlaylistButton.setOnClickListener(v -> {
-            MainActivity.showTextInputDialog(view.getContext(), "Playlist name", name -> {
-                PlaylistMetadata playlist = new PlaylistMetadata(name, 0);
-                PlaylistsUtil.addPlaylist(playlist, view.getContext());
+            MainActivity.showTextInputDialog(view.getContext(), "Playlist name", new InputEnterCallback() {
+                @Override
+                public void onInputEnter(String input) {
+                    PlaylistMetadata playlist = new PlaylistMetadata(input, 0);
+                    PlaylistsUtil.addPlaylist(playlist, view.getContext());
 
-                playlistAdapter.notifyInsertion();
+                    playlistAdapter.notifyInsertion();
+                }
+
+                @Override public void onInputEnter(int position) {}
             });
         });
 

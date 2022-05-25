@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.example.music_player.metadata.PlaylistMetadata;
+import com.example.music_player.metadata.SongMetadata;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public class PlaylistsUtil {
     public static void addPlaylist(PlaylistMetadata playlist, Context context){
         getPlaylists(context);
         playlistMetadataArrayList.add(playlist);
-        FileUtil.savePlaylists(playlistMetadataArrayList, context);
+        FileUtil.savePlaylist(playlist, context);
     }
 
     public static ArrayList<PlaylistMetadata> getPlaylists(@NonNull Context context){
@@ -25,6 +26,10 @@ public class PlaylistsUtil {
         return playlistMetadataArrayList;
     }
 
+    public static void addToPlaylist(@NonNull PlaylistMetadata playlist, @NonNull SongMetadata song, @NonNull Context context){
+        playlist.addSong(song, context);
+    }
+
     public static void renamePlaylist(String name){
         ///
     }
@@ -32,4 +37,5 @@ public class PlaylistsUtil {
     public static ArrayList<PlaylistMetadata> getPlaylists(){
         return playlistMetadataArrayList;
     }
+
 }

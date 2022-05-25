@@ -13,5 +13,7 @@
     <item android:id="@+id/add_all_songs"
         android:title="Add all song"/>
 
+    <item android:id="@+id/add_to_playlist"
+        android:title="Add to playlist"/>
 
 </menu>

@@ -12,17 +12,23 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -30,11 +36,15 @@ import com.example.music_player.adapters.FragmentAdapter;
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.interfacesAndAbstracts.InputEnterCallback;
 import com.example.music_player.interfacesAndAbstracts.SongListCallback;
+import com.example.music_player.metadata.PlaylistMetadata;
 import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.FileUtil;
+import com.example.music_player.utils.PlaylistsUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -145,6 +155,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         alertDialogBuilder.show();
+    }
+
+    public static void showPlaylistsDialog(@NonNull Context context, @NonNull InputEnterCallback inputEnterCallback){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.InputDialogTheme);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.playlist_names_dialog, null);
+
+        ListView listView = view.findViewById(R.id.playlists_listview);
+
+        ArrayList<PlaylistMetadata> playlists = PlaylistsUtil.getPlaylists(context);
+        ArrayList<String> playlistsNames= new ArrayList<>();
+
+        for(PlaylistMetadata playlist : playlists){
+            playlistsNames.add(playlist.getName());
+        }
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.list_view_item, playlistsNames);
+        listView.setAdapter(arrayAdapter);
+
+        alertDialogBuilder.setView(view);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                inputEnterCallback.onInputEnter(position);
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog.show();
     }
 
     private int addMultipleTabsToTablayout(@NonNull TabLayout tabLayout, @NonNull String... tabNames){

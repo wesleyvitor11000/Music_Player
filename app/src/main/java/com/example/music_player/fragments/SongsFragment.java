@@ -17,10 +17,12 @@ import android.widget.TextView;
 
 import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
+import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.FileUtil;
 import com.example.music_player.adapters.SongAdapter;
 import com.example.music_player.R;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
+import com.example.music_player.utils.SongUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -96,11 +98,11 @@ public class SongsFragment extends Fragment implements SortedFragment {
         Thread importMusicsThread = new Thread(){
             @Override
             public void run(){
-                File[] musics = FileUtil.findSongs(Environment.getExternalStorageDirectory());
+                SongMetadata[] songs = SongUtil.getSongs(view.getContext());
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
 
-                musicAdapter = new SongAdapter(musics, sortKey, view.getContext());
+                musicAdapter = new SongAdapter(songs, sortKey, view.getContext());
                 sortElements(sortKey);
 
                 Handler mainLooper = new Handler(Looper.getMainLooper());

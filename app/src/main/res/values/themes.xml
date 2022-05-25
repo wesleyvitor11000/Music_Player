@@ -34,5 +34,10 @@
         <item name="android:background"> @color/secondary_background </item>
         <item name="android:textColor"> @color/primary_white</item>
     </style>
+    
+    <style name="OutlinedButtonStyle" parent="TextAppearance.AppCompat.Button">
+        <item name="android:background">@drawable/outlined_rectangle</item>
+        <item name="android:textColor">@color/medium_opacity_white</item>
+    </style>
 
 </resources>

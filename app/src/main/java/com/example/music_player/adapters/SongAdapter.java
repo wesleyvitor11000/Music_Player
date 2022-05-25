@@ -19,9 +19,12 @@ import com.example.music_player.MainActivity;
 import com.example.music_player.R;
 import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
+import com.example.music_player.interfacesAndAbstracts.InputEnterCallback;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
+import com.example.music_player.metadata.PlaylistMetadata;
 import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.MetadataUtil;
+import com.example.music_player.utils.PlaylistsUtil;
 
 import java.io.File;
 
@@ -36,10 +39,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
     private boolean isSearching = false;
 
-    public SongAdapter(File[] songs, SortKey sortKey, Context context){
+    public SongAdapter(SongMetadata[] songs, SortKey sortKey, Context context){
         this.context = context;
 
-        allSongsMetadata = MetadataUtil.getAttributes(context, songs);
+        allSongsMetadata = songs;
         findSongsMetadata = new SongMetadata[0];
 
         currentSongsMetadata = allSongsMetadata;
@@ -140,6 +143,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
                     case R.id.add_all_songs:
                         SongPlayer.addAllSongs(currentSongsMetadata);
+                        break;
+
+                    case R.id.add_to_playlist:
+                        MainActivity.showPlaylistsDialog(context, new InputEnterCallback() {
+                            @Override
+                            public void onInputEnter(String input) {}
+
+                            @Override
+                            public void onInputEnter(int position) {
+                                PlaylistMetadata playlist = PlaylistsUtil.getPlaylists().get(position);
+                                playlist.addSong(currentSongsMetadata[getLayoutPosition()], context);
+                            }
+                        });
                         break;
                 }
                 return true;

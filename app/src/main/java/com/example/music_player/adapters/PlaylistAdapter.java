@@ -1,6 +1,7 @@
 package com.example.music_player.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_player.PlaylistSongsActivity;
 import com.example.music_player.R;
 import com.example.music_player.metadata.PlaylistMetadata;
 
@@ -60,6 +62,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         public PlaylistHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.playlist_name_tv);
+
+            itemView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, PlaylistSongsActivity.class);
+                intent.putExtra("position", getLayoutPosition());
+                context.startActivity(intent);
+            });
         }
     }
 }

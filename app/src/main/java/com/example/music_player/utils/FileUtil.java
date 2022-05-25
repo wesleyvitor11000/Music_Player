@@ -3,6 +3,7 @@ package com.example.music_player.utils;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 
 import com.example.music_player.enumsAndGlobals.GlobalAtributes;
@@ -29,9 +30,10 @@ public class FileUtil {
     private static final String TAG = "FileUtil";
 
     //save files names
-    private static final String sortSettingsFileName = "sortingSettings.stg";
-    private static final String playlistsFileName = "playlists.stg";
-    private static final String playlistsDirectoryName = "/playlists";
+    private static final String settingsFileExtension = ".stg";
+    private static final String sortSettingsFileName = "sortingSettings" + settingsFileExtension;
+    private static final String playlistsFileName = "playlists" + settingsFileExtension;;
+    private static final String playlistsDirectoryName = "playlists";
 
     public static File[] findSongs(File files){
         return findSongsArray(files).toArray(new File[0]);
@@ -69,18 +71,16 @@ public class FileUtil {
         return supportedFormats.contains(fileExtension);
     }
 
-    public static void saveStringToFile(@NonNull String content, @NonNull String fileName, @NonNull Context context) {
-        saveStringToFile(content, fileName, "", context);
+    public static void saveStringToFile(@NonNull String content, @NonNull String fileName, boolean append, @NonNull Context context) {
+        saveStringToFile(content, fileName, "", append, context);
     }
 
-    public static void saveStringToFile(@NonNull String content, @NonNull String fileName, @NonNull String directory, @NonNull Context context){
+    public static void saveStringToFile(@NonNull String content, @NonNull String fileName, @NonNull String directory, boolean append, @NonNull Context context){
 
         File file = getInternalFileFrom(fileName, directory, context);
 
-        System.out.println("saving: " + content);
-
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            FileOutputStream fileOutputStream = new FileOutputStream(file, append);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
 
             outputStreamWriter.write(content);
@@ -97,7 +97,6 @@ public class FileUtil {
     }
 
     public static String[] readFile(String fileName, String directory, Context context){
-        //String[] content = new String[GlobalAtributes.FRAGMENTS_NUMBER];
         ArrayList<String> content = new ArrayList<>();
 
         File file = getInternalFileFrom(fileName, directory, context);
@@ -127,7 +126,7 @@ public class FileUtil {
 
     public static File getInternalFileFrom(String fileName, String directory, Context context){
         File filesDir = context.getFilesDir();
-        File fileDir = new File(filesDir.getAbsolutePath() + directory);
+        File fileDir = new File(filesDir.getAbsolutePath() + "/" + directory);
 
         if(!fileDir.exists())
             fileDir.mkdir();
@@ -146,7 +145,7 @@ public class FileUtil {
             }
         }
 
-        saveStringToFile(sortKeysStringBuilder.toString(), sortSettingsFileName, context);
+        saveStringToFile(sortKeysStringBuilder.toString(), sortSettingsFileName, false, context);
     }
 
     public static SortKey[] readSortSettings(Context context){
@@ -177,9 +176,7 @@ public class FileUtil {
             }
         }
 
-        saveStringToFile(stringBuilder.toString(), playlistsFileName, context);
-        System.out.println("testing reimport");
-        importPlaylists(context);
+        saveStringToFile(stringBuilder.toString(), playlistsFileName, false, context);
     }
 
     public static ArrayList<PlaylistMetadata> importPlaylists(@NonNull Context context) {
@@ -202,11 +199,35 @@ public class FileUtil {
         return playlists;
     }
 
-    public static ArrayList<SongMetadata> importPlaylistSongs(PlaylistMetadata playlist){
-        return null;
+    public static void savePlaylist(@NonNull PlaylistMetadata playlist, @NonNull Context context) {
+        String stringBuilder =  playlist.getName() + "#" +
+                                playlist.getDate() + "\n";
+
+        saveStringToFile(stringBuilder, playlistsFileName, true, context);
     }
 
-    public static void savePlaylist(PlaylistMetadata playlistMetadata) {
+    public static ArrayList<SongMetadata> importPlaylistSongs(@NonNull PlaylistMetadata playlist, @NonNull Context context){
 
+        String[] playlistSongsPaths = readFile(playlist.getName() + settingsFileExtension, playlistsDirectoryName, context);
+        ArrayList<SongMetadata> songs = new ArrayList<>();
+
+        if (playlistSongsPaths == null) return songs;
+
+        for(String s : playlistSongsPaths){
+            if(s == null) continue;
+
+            SongMetadata song = SongUtil.getSongMetadataFromPath(s, context);
+            songs.add(song);
+        }
+
+        return songs;
+    }
+
+    public static void saveSongOnPlaylist(@NonNull PlaylistMetadata playlist, @NonNull SongMetadata song, @NonNull Context context) {
+        String songPath = song.getUri().getPath() + "\n";
+        System.out.println("Saving path: " + songPath);
+        System.out.println("in Playlist: " + playlistsDirectoryName + "/" + playlist.getName() + settingsFileExtension);
+
+        saveStringToFile(songPath, playlist.getName() + settingsFileExtension, playlistsDirectoryName, true, context);
     }
 }
