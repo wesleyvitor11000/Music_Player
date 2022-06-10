@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -18,14 +17,11 @@ import android.widget.TextView;
 import com.example.music_player.SongPlayer;
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.metadata.SongMetadata;
-import com.example.music_player.utils.FileUtil;
 import com.example.music_player.adapters.SongAdapter;
 import com.example.music_player.R;
 import com.example.music_player.interfacesAndAbstracts.SortedFragment;
-import com.example.music_player.utils.SongUtil;
+import com.example.music_player.singletons.SongsSingleton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,7 +94,7 @@ public class SongsFragment extends Fragment implements SortedFragment {
         Thread importMusicsThread = new Thread(){
             @Override
             public void run(){
-                SongMetadata[] songs = SongUtil.getSongs(view.getContext());
+                SongMetadata[] songs = SongsSingleton.getInstance(view.getContext()).getSongs(view.getContext());
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
 

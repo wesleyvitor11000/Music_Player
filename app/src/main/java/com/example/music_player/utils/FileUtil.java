@@ -3,22 +3,19 @@ package com.example.music_player.utils;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 
 import com.example.music_player.enumsAndGlobals.GlobalAtributes;
 import com.example.music_player.enumsAndGlobals.SortKey;
 import com.example.music_player.metadata.PlaylistMetadata;
 import com.example.music_player.metadata.SongMetadata;
+import com.example.music_player.singletons.SongsSingleton;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,7 +213,7 @@ public class FileUtil {
         for(String s : playlistSongsPaths){
             if(s == null) continue;
 
-            SongMetadata song = SongUtil.getSongMetadataFromPath(s, context);
+            SongMetadata song = SongsSingleton.getInstance(context).getSongMetadataFromPath(s);
             songs.add(song);
         }
 
