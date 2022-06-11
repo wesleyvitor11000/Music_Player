@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,16 +26,16 @@ import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.MetadataUtil;
 import com.example.music_player.utils.PlaylistsUtil;
 
-import java.io.File;
-
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements SortedFragment {
 
-    private final SongMetadata[] allSongsMetadata;
-    private SongMetadata[] findSongsMetadata;
+    private SongMetadata[] allSongsMetadata;
+    private final SongMetadata[] findSongsMetadata;
     private SongMetadata[] currentSongsMetadata;
 
     private final Context context;
     private SortKey sortKey;
+    private @MenuRes int optionsMenu = -1;
+    private PlaylistMetadata playlist;
 
     private boolean isSearching = false;
 
@@ -48,6 +48,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         currentSongsMetadata = allSongsMetadata;
 
         sortElements(sortKey);
+    }
+
+    public SongAdapter(SongMetadata[] songs, SortKey sortKey, @MenuRes int optionsMenu, Context context){
+        this.context = context;
+        this.optionsMenu = optionsMenu;
+
+        allSongsMetadata = songs;
+        findSongsMetadata = new SongMetadata[0];
+
+        currentSongsMetadata = allSongsMetadata;
+
+        sortElements(sortKey);
+    }
+
+    public void setPlaylist(PlaylistMetadata playlist){
+        this.playlist = playlist;
     }
 
     @NonNull
@@ -99,8 +115,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     @Override
     public void exitSearchMode() {
         isSearching = false;
-        notifyDataSetChanged();
         currentSongsMetadata = allSongsMetadata;
+        notifyDataSetChanged();
     }
 
     public class SongHolder extends RecyclerView.ViewHolder{
@@ -123,43 +139,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
             ImageButton moreOptionsButton = itemView.findViewById(R.id.more_options_button);
 
-            moreOptionsButton.setOnClickListener(view -> MainActivity.showPopupMenu(context, view, R.menu.sound_adapter_menu, menuItem -> {
-                switch (menuItem.getItemId()){
-                    case R.id.reproduce:
-                        SongPlayer.clearAllSongs();
-                        SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
-                        SongPlayer.playSongs(context);
-                        break;
+            if(optionsMenu != -1){
+               // moreOptionsButton.setOnClickListener(view -> MainActivity.showPopupMenu(context, view, optionsMenu, onMenuItemClickListener));
+            }else{
+                moreOptionsButton.setVisibility(View.GONE);
+                return;
+            }
 
-                    case R.id.reproduce_all:
-                        SongPlayer.clearAllSongs();
-                        SongPlayer.addAllSongs(currentSongsMetadata);
-                        SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
-                        break;
-
-                    case R.id.add_song:
-                        SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
-                        break;
-
-                    case R.id.add_all_songs:
-                        SongPlayer.addAllSongs(currentSongsMetadata);
-                        break;
-
-                    case R.id.add_to_playlist:
-                        MainActivity.showPlaylistsDialog(context, new InputEnterCallback() {
-                            @Override
-                            public void onInputEnter(String input) {}
-
-                            @Override
-                            public void onInputEnter(int position) {
-                                PlaylistMetadata playlist = PlaylistsUtil.getPlaylists().get(position);
-                                playlist.addSong(currentSongsMetadata[getLayoutPosition()], context);
-                            }
-                        });
-                        break;
-                }
-                return true;
-            }));
+            moreOptionsButton.setOnClickListener(view -> MainActivity.showPopupMenu(context, view, optionsMenu, this::onMenuItemClick));
         }
 
         public void setAttributes(SongMetadata songMetadata){
@@ -177,6 +164,51 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                 musicImage.setImageResource(R.drawable.ic_baseline_music_note_24);
             }
 
+        }
+
+        private boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.reproduce:
+                    SongPlayer.clearAllSongs();
+                    SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
+                    SongPlayer.playSongs(context);
+                    break;
+
+                case R.id.reproduce_all:
+                    SongPlayer.clearAllSongs();
+                    SongPlayer.addAllSongs(currentSongsMetadata);
+                    SongPlayer.playSong(currentSongsMetadata[getLayoutPosition()], context);
+                    break;
+
+                case R.id.add_song:
+                    SongPlayer.addSong(currentSongsMetadata[getLayoutPosition()]);
+                    break;
+
+                case R.id.add_all_songs:
+                    SongPlayer.addAllSongs(currentSongsMetadata);
+                    break;
+
+                case R.id.add_to_playlist:
+                    MainActivity.showPlaylistsDialog(context, new InputEnterCallback() {
+                        @Override
+                        public void onInputEnter(String input) {
+                        }
+
+                        @Override
+                        public void onInputEnter(int position) {
+                            PlaylistMetadata playlist = PlaylistsUtil.getPlaylists().get(position);
+                            playlist.addSong(currentSongsMetadata[getLayoutPosition()], context);
+                        }
+                    });
+                    break;
+
+                case R.id.remove_from_playlist:
+                    if (playlist == null) break;
+                    playlist.removeSong(currentSongsMetadata[getLayoutPosition()], context);
+                    allSongsMetadata = playlist.getPlaylistSongs(context).toArray(new SongMetadata[0]);
+                    exitSearchMode();
+            }
+            return true;
         }
     }
 }

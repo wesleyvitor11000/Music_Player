@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -98,7 +100,7 @@ public class SongsFragment extends Fragment implements SortedFragment {
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
 
-                musicAdapter = new SongAdapter(songs, sortKey, view.getContext());
+                musicAdapter = new SongAdapter(songs, sortKey, R.menu.sound_adapter_menu, view.getContext());
                 sortElements(sortKey);
 
                 Handler mainLooper = new Handler(Looper.getMainLooper());

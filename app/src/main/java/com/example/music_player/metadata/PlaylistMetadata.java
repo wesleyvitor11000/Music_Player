@@ -20,12 +20,12 @@ public class PlaylistMetadata extends ItemMetadata {
     public void addSong(@NonNull SongMetadata song, @NonNull Context context){
         getPlaylistSongs(context);
         songs.add(song);
-        FileUtil.saveSongOnPlaylist(this, song, context);
+        FileUtil.addSongOnPlaylist(this, song, context);
     }
 
-    public void removeSound(@NonNull SongMetadata song, @NonNull Context context){
-        getPlaylistSongs(context);
+    public void removeSong(@NonNull SongMetadata song, @NonNull Context context){
         songs.remove(song);
+        FileUtil.savePlaylistSongs(this, songs, context);
     }
 
     public ArrayList<SongMetadata> getPlaylistSongs(@NonNull Context context){
@@ -35,7 +35,4 @@ public class PlaylistMetadata extends ItemMetadata {
 
         return songs;
     }
-
-
-
 }

@@ -12,13 +12,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -40,7 +38,6 @@ import com.example.music_player.metadata.PlaylistMetadata;
 import com.example.music_player.metadata.SongMetadata;
 import com.example.music_player.utils.FileUtil;
 import com.example.music_player.utils.PlaylistsUtil;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //defining tab layout tabs
-        addMultipleTabsToTablayout(tabLayout, "Tracks", "Playlists", "Artists", "Albums");
+        addMultipleTabsToTabLayout(tabLayout, "Tracks", "Playlists", "Artists", "Albums");
 
         //setting view pager
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), getLifecycle(), actualSortSettings);
@@ -164,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View view = layoutInflater.inflate(R.layout.playlist_names_dialog, null);
 
         ListView listView = view.findViewById(R.id.playlists_listview);
+        Button newPlaylistButton = view.findViewById(R.id.new_playlist_button);
 
         ArrayList<PlaylistMetadata> playlists = PlaylistsUtil.getPlaylists(context);
         ArrayList<String> playlistsNames= new ArrayList<>();
@@ -186,17 +184,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        newPlaylistButton.setOnClickListener(v -> {
+            showTextInputDialog(view.getContext(), "Playlist name", new InputEnterCallback() {
+                @Override
+                public void onInputEnter(String input) {
+                    PlaylistMetadata playlist = new PlaylistMetadata(input, 0);
+                    PlaylistsUtil.addPlaylist(playlist, view.getContext());
+
+                    inputEnterCallback.onInputEnter(playlists.size() -1);
+                    alertDialog.cancel();
+                }
+
+                @Override public void onInputEnter(int position) {}
+            });
+        });
+
         alertDialog.show();
     }
 
-    private int addMultipleTabsToTablayout(@NonNull TabLayout tabLayout, @NonNull String... tabNames){
+    private void addMultipleTabsToTabLayout(@NonNull TabLayout tabLayout, @NonNull String... tabNames){
 
         for (String tabName: tabNames) {
             TabLayout.Tab tab = tabLayout.newTab().setText(tabName);
             tabLayout.addTab(tab);
         }
 
-        return tabNames.length;
     }
 
     @Override

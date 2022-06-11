@@ -16,7 +16,7 @@ import com.example.music_player.metadata.PlaylistMetadata;
 
 import java.util.ArrayList;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistHolder>{
 
     private ArrayList<PlaylistMetadata> playlists;
     private final Context context;

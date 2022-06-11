@@ -220,11 +220,18 @@ public class FileUtil {
         return songs;
     }
 
-    public static void saveSongOnPlaylist(@NonNull PlaylistMetadata playlist, @NonNull SongMetadata song, @NonNull Context context) {
+    public static void addSongOnPlaylist(@NonNull PlaylistMetadata playlist, @NonNull SongMetadata song, @NonNull Context context) {
         String songPath = song.getUri().getPath() + "\n";
-        System.out.println("Saving path: " + songPath);
-        System.out.println("in Playlist: " + playlistsDirectoryName + "/" + playlist.getName() + settingsFileExtension);
-
         saveStringToFile(songPath, playlist.getName() + settingsFileExtension, playlistsDirectoryName, true, context);
+    }
+
+    public static void savePlaylistSongs(@NonNull PlaylistMetadata playlist, @NonNull ArrayList<SongMetadata> songs, @NonNull Context context){
+        StringBuilder songsPath = new StringBuilder();
+
+        for(SongMetadata song : songs){
+            songsPath.append(song.getUri().getPath() + "\n");
+        }
+
+        saveStringToFile(songsPath.toString(), playlist.getName() + settingsFileExtension, playlistsDirectoryName, false, context);
     }
 }

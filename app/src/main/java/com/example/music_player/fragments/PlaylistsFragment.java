@@ -35,6 +35,8 @@ public class PlaylistsFragment extends Fragment implements SortedFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private PlaylistAdapter playlistAdapter;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -79,7 +81,9 @@ public class PlaylistsFragment extends Fragment implements SortedFragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
 
         ArrayList<PlaylistMetadata> playlists = PlaylistsUtil.getPlaylists(view.getContext());
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(playlists, view.getContext());
+        playlistAdapter = new PlaylistAdapter(playlists, view.getContext());
+
+        PlaylistsUtil.addOnPlaylistsChange(() -> playlistAdapter.updatePlaylists(PlaylistsUtil.getPlaylists()));
 
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(playlistAdapter);
@@ -99,6 +103,8 @@ public class PlaylistsFragment extends Fragment implements SortedFragment {
                 @Override public void onInputEnter(int position) {}
             });
         });
+
+
 
         return view;
     }

@@ -24,6 +24,12 @@ public class FragmentAdapter extends FragmentStateAdapter {
         this.sortKeys = sortKeys;
     }
 
+    public SortedFragment getFragmentAt(int position){
+        if (position >= numberOfFragments) return null;
+
+        return fragments[position];
+    }
+
     public void sortElementsOnFragment(int position, SortKey sorttype){
         fragments[position].sortElements(sorttype);
     }
